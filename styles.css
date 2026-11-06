@@ -45,3 +45,24 @@ nav a{font-size:11px;letter-spacing:1.8px}
 .btn-outline{border-color:#9c8154}
 footer img{object-fit:contain;mix-blend-mode:screen}
 @media(max-width:620px){.site-header{height:76px}.brand img{width:110px;height:62px}.hero{min-height:570px;background-position:center,65% center;background-size:cover,auto 80%;}.hero h1{letter-spacing:-2.5px}.product-art{height:160px}.product-info{padding:13px}.perfume-card{min-height:190px}.section{padding:75px 6%}}
+
+/* Correcciones de fotografía y tarjetas DAYZEN */
+.product-art{display:flex;align-items:center;justify-content:center;background:#f1efeb;overflow:hidden}
+.product-art img{width:100%;height:100%;object-fit:contain;object-position:center center;padding:14px;box-sizing:border-box}
+.brand-tag{letter-spacing:.12em}
+.perfume-group{grid-column:1/-1;margin:10px 0 28px}
+.perfume-group-title{font-family:inherit;font-size:1.25rem;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid #b99a58;padding-bottom:12px;margin:0 0 18px}
+.perfume-group-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px}
+.perfume-card{background:#fff;color:#171717;overflow:hidden;border:1px solid #e8e4dc}
+.perfume-photo{height:230px;background:#f5f3ef;display:flex;align-items:center;justify-content:center;padding:14px}
+.perfume-photo img{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;object-position:center}
+.perfume-details{padding:18px}
+.perfume-details h3{margin:8px 0 12px}
+.notes{font-size:.78rem;line-height:1.55;color:#68635c;min-height:96px}
+.notes p{margin:5px 0}
+.perfume-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
+.stock{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#a66b5d}
+@media(max-width:600px){.perfume-photo{height:200px}.perfume-group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.notes{font-size:.7rem}}
+
+.upcoming-section{margin:36px 0 0}.upcoming-section>h3{font-size:1.15rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 18px;color:#b99a58}.upcoming-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px}
+.catalog-pages figure img{display:block;width:100%;height:auto;object-fit:contain;background:#f3f1ed}
