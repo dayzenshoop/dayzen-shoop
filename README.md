@@ -9,3 +9,6 @@
 6. Espera unos minutos y recarga la dirección actual de DAYZEN con Ctrl+F5.
 
 El sitio conserva el flujo de bolsa y pedido por WhatsApp. Los números de WhatsApp configurados en el archivo original se mantienen.
+
+## Ajuste solicitado
+Se corrigió la asignación del calzado: Nike JA 1 permanece en stock con su fotografía correcta; el Adidas celeste quedó en Próximamente. Se retiró completamente la sección Catálogos y sus enlaces del menú e inicio, porque los catálogos se compartirán directamente con los clientes.
