@@ -11,7 +11,7 @@
 <header class="site-header">
   <a class="brand" href="#inicio" aria-label="DAYZEN inicio"><img src="assets/dayzen-logo.jpeg" alt="DAYZEN Moda y Calzado"></a>
   <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">☰</button>
-  <nav id="mainNav"><a href="#zapatos">Zapatos</a><a href="#perfumes">Perfumes</a><a href="#contacto">Contacto</a></nav>
+  <nav id="mainNav"><a href="#zapatos">Zapatos</a><a href="#ropa">Ropa</a><a href="#perfumes">Perfumes</a><a href="#bienestar">Cuidado personal</a><a href="#esencia">Nuestra esencia</a><a href="#contacto">Contacto</a></nav>
   <button class="cart-trigger" id="openCart">Bolsa <span id="cartCount">0</span></button>
 </header>
 <main>
@@ -31,11 +31,27 @@
   <div class="toolbar"><input id="searchInput" type="search" placeholder="Buscar modelo o marca..." aria-label="Buscar productos"><select id="categoryFilter" aria-label="Filtrar categoría"><option value="todos">Todas las categorías</option><option value="adulto">Adultos</option><option value="ninos">Niños</option></select><select id="sortFilter" aria-label="Ordenar"><option value="featured">Destacados</option><option value="low">Precio: menor a mayor</option><option value="high">Precio: mayor a menor</option></select></div>
   <div class="product-grid" id="shoeGrid"></div>
 </section>
+<section class="section" id="ropa">
+ <div class="section-heading"><div><p class="eyebrow">MODA PARA TODOS</p><h2>Prendas para<br>cada estilo.</h2></div><p class="section-note">Descubre prendas seleccionadas para hombre, mujer y niños.</p></div>
+ <div id="apparelGrid"></div>
+</section>
 <section class="perfume-section" id="perfumes">
  <div class="section dark-heading"><div><p class="eyebrow">ENCUENTRA TU FRAGANCIA</p><h2>Un aroma,<br>una identidad.</h2></div><p class="section-note">Explora las opciones disponibles en nuestro catálogo de perfumes y sets.</p></div>
  <div class="perfume-grid" id="perfumeGrid"></div>
 </section>
 
+<section class="section" id="bienestar">
+ <div class="section-heading"><div><p class="eyebrow">CUIDADO Y BIENESTAR</p><h2>Detalles para<br>sentirte bien.</h2></div><p class="section-note">Productos de cuidado personal, vitaminas y suplementos seleccionados.</p></div>
+ <div id="wellnessGrid"></div>
+ <p class="wellness-note">Los suplementos se presentan con la información del catálogo del proveedor. Consulta a un profesional de salud antes de iniciar su consumo.</p>
+</section>
+<section class="section essence-section" id="esencia">
+ <div class="section-heading"><div><p class="eyebrow">LO QUE NOS INSPIRA</p><h2>Nuestra esencia.</h2></div><p class="section-note">Conoce el propósito que guía a DAYZEN.</p></div>
+ <div class="essence-tabs">
+  <details><summary>Nuestra misión</summary><p>En DAYZEN trabajamos para ofrecer a nuestros clientes productos que complementen su estilo y bienestar, reuniendo moda, calzado, fragancias y artículos de cuidado personal en un solo lugar. Nos comprometemos a brindar atención personalizada, precios competitivos, confianza y una experiencia de compra práctica, cómoda y satisfactoria.</p></details>
+  <details><summary>Nuestra visión</summary><p>Ser una tienda referente en moda, calzado, perfumería y cuidado personal, reconocida por ofrecer productos seleccionados, calidad, estilo y una experiencia de compra cercana y confiable. Aspiramos a crecer junto a nuestros clientes y convertir a DAYZEN en una marca reconocida por su elegancia, variedad y compromiso.</p></details>
+ </div>
+</section>
 <section class="contact-section" id="contacto"><p class="eyebrow">ESTAMOS PARA AYUDARTE</p><h2>¿Listo para elegir?</h2><p>Escríbenos. Te ayudamos a confirmar disponibilidad, tallas y detalles de tu compra.</p><div class="contact-buttons"><a class="btn btn-light" href="https://wa.me/593967090982" target="_blank" rel="noopener">WhatsApp 096 709 0982</a><a class="btn btn-outline" href="https://wa.me/593962585991" target="_blank" rel="noopener">WhatsApp 096 258 5991</a></div></section>
 </main>
 <footer><img src="assets/dayzen-logo.jpeg" alt="DAYZEN"><p>© <span id="year"></span> DAYZEN Moda y Calzado · Ecuador</p><a href="#inicio">Volver arriba ↑</a></footer>
