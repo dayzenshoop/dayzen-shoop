@@ -141,3 +141,51 @@ $('#year').textContent=new Date().getFullYear();renderShoeBrandTabs();renderPerf
 
 renderApparel();
 renderWellness();
+
+
+// DERECK: asesor guiado gratuito (sin IA externa ni costos por mensaje)
+const dereckPanel=$('#dereckPanel'),dereckChat=$('#dereckChat');
+function dereckOpen(){dereckPanel.classList.add('open');dereckPanel.setAttribute('aria-hidden','false');$('#dereckLauncher').style.display='none'}
+function dereckClose(){dereckPanel.classList.remove('open');dereckPanel.setAttribute('aria-hidden','true');$('#dereckLauncher').style.display='flex'}
+function dereckMessage(text){const node=document.createElement('div');node.className='dereck-message dereck-bot';node.innerHTML=text;dereckChat.appendChild(node);dereckChat.scrollTop=dereckChat.scrollHeight}
+function dereckMenu(){
+ dereckChat.innerHTML='<div class="dereck-message dereck-bot">¡Claro! Estoy listo para ayudarte. Elige una categoría y te mostraré opciones del catálogo DAYZEN. ✨</div><div class="dereck-options" id="dereckOptions"><button data-dereck-action="zapatos">👟 Ver zapatos</button><button data-dereck-action="perfumes">🌸 Encontrar un perfume</button><button data-dereck-action="ropa">👕 Ver ropa</button><button data-dereck-action="bienestar">✨ Cuidado y bienestar</button><button data-dereck-action="stock">📦 Consultar disponibilidad</button><button data-dereck-action="whatsapp">💬 Hablar por WhatsApp</button></div>';
+}
+function dereckShowProducts(kind){
+ const wrap=document.createElement('div');wrap.className='dereck-options';wrap.id='dereckResults';
+ let products=[];
+ if(kind==='zapatos')products=shoes.map((p,i)=>({name:p[1],detail:p[2],price:p[3],out:p[6],key:'s'+i,add:()=>addItem({key:'s'+i,name:p[1],detail:p[2],price:p[3]})}));
+ if(kind==='perfumes')products=perfumes.map((p,i)=>({name:p[0],detail:'Salida: '+p[4]+' · Corazón: '+p[5],price:p[2],out:p[7],key:'p'+i,add:()=>addItem({key:'p'+i,name:p[0],detail:'Perfume',price:p[2]})}));
+ if(kind==='ropa')products=apparel.map((p,i)=>({name:p[0],detail:p[1]+' · Talla '+p[2],price:p[3],out:p[4],key:'a'+i,add:()=>addItem({key:'a'+i,name:p[0],detail:'Talla '+p[2],price:p[3]})}));
+ if(kind==='bienestar')products=wellness.map((p,i)=>({name:p[0],detail:p[1],price:p[2],out:p[3],key:'w'+i,add:()=>addItem({key:'w'+i,name:p[0],detail:p[1],price:p[2]})}));
+ const available=products.filter(p=>!p.out).slice(0,6);
+ const results=available.map(p=>`<div class="dereck-result"><strong>${p.name}</strong><p>${p.detail}</p><p><b>${money(p.price)}</b></p><button type="button" data-dereck-add="${p.key}">Agregar a mi bolsa</button></div>`).join('');
+ wrap.innerHTML=results||'<div class="dereck-message dereck-bot">Por ahora no tengo opciones disponibles en esta categoría. Escríbenos y confirmamos novedades.</div>';
+ dereckChat.appendChild(wrap);
+ const more=document.createElement('div');more.className='dereck-message dereck-bot';more.textContent='Estas son algunas opciones disponibles del catálogo. Si buscas un modelo específico, puedes consultar directamente por WhatsApp.';dereckChat.appendChild(more);
+ const back=document.createElement('button');back.className='dereck-back';back.textContent='← Volver al menú';back.onclick=dereckMenu;dereckChat.appendChild(back);dereckChat.scrollTop=dereckChat.scrollHeight;
+}
+function dereckStock(){
+ const sold=[];
+ shoes.forEach(p=>{if(p[6])sold.push(p[1]+' (zapatos)')});
+ perfumes.forEach(p=>{if(p[7])sold.push(p[0]+' (perfume)')});
+ apparel.forEach(p=>{if(p[4])sold.push(p[0]+' (ropa)')});
+ wellness.forEach(p=>{if(p[3])sold.push(p[0])});
+ const upcomingNames=upcoming.map(p=>p[0]);
+ dereckMessage('<b>Te comparto el estado registrado en el catálogo:</b><br><br><b>Agotados:</b><br>'+sold.join('<br>')+'<br><br><b>Próximamente:</b><br>'+upcomingNames.join('<br>')+'<br><br>El inventario puede cambiar. Si deseas confirmar una unidad, te ayudo a escribirnos.');
+ const back=document.createElement('button');back.className='dereck-back';back.textContent='← Volver al menú';back.onclick=dereckMenu;dereckChat.appendChild(back);dereckChat.scrollTop=dereckChat.scrollHeight;
+}
+$('#dereckLauncher').addEventListener('click',dereckOpen);
+$('#dereckClose').addEventListener('click',dereckClose);
+$('#dereckHome').addEventListener('click',dereckMenu);
+dereckChat.addEventListener('click',e=>{
+ const choice=e.target.closest('[data-dereck-action]');
+ if(choice){
+  const action=choice.dataset.dereckAction;
+  if(['zapatos','perfumes','ropa','bienestar'].includes(action)){const labels={zapatos:'zapatos',perfumes:'perfumes',ropa:'ropa',bienestar:'cuidado y bienestar'};dereckMessage('¡Buena elección! Vamos a ver '+labels[action]+'.');dereckShowProducts(action)}
+  else if(action==='stock')dereckStock();
+  else if(action==='whatsapp'){const msg=encodeURIComponent('Hola DAYZEN, estoy conversando con Dereck y quisiera recibir asesoría sobre sus productos.');window.open('https://wa.me/593967090982?text='+msg,'_blank','noopener')}
+ }
+ const add=e.target.closest('[data-dereck-add]');
+ if(add){const key=add.dataset.dereckAdd;const type=key[0],i=Number(key.slice(1));let item;if(type==='s'){const p=shoes[i];item={key,name:p[1],detail:p[2],price:p[3]}}if(type==='p'){const p=perfumes[i];item={key,name:p[0],detail:'Perfume',price:p[2]}}if(type==='a'){const p=apparel[i];item={key,name:p[0],detail:'Talla '+p[2],price:p[3]}}if(type==='w'){const p=wellness[i];item={key,name:p[0],detail:p[1],price:p[2]}}if(item){addItem(item);add.textContent='Agregado ✓';add.disabled=true}}
+});

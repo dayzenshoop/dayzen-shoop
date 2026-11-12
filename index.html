@@ -59,5 +59,29 @@
 </main>
 <footer><img src="assets/dayzen-logo.jpeg" alt="DAYZEN"><p>© <span id="year"></span> DAYZEN Moda y Calzado · Ecuador</p><a href="#inicio">Volver arriba ↑</a></footer>
 <div class="cart-backdrop" id="cartBackdrop"></div><aside class="cart-panel" id="cartPanel" aria-label="Tu bolsa" aria-hidden="true"><div class="cart-head"><h3>Tu bolsa</h3><button id="closeCart" aria-label="Cerrar bolsa">✕</button></div><div id="cartItems" class="cart-items"><p class="empty">Todavía no agregas productos.</p></div><div class="cart-foot"><div class="cart-total"><span>Total estimado</span><strong id="cartTotal">$0.00</strong></div><label for="customerName">Tu nombre (opcional)</label><input id="customerName" placeholder="¿Cómo te llamas?"><label for="waNumber">Enviar pedido a</label><select id="waNumber"><option value="593967090982">096 709 0982</option><option value="593962585991">096 258 5991</option></select><button class="btn btn-dark full" id="checkout">Pedir por WhatsApp ↗</button><small>El pedido se envía por WhatsApp para confirmar stock, entrega y pago. La web no procesa pagos con tarjeta.</small></div></aside>
+
+<!-- Asesor virtual guiado Dereck -->
+<button class="dereck-launcher" id="dereckLauncher" type="button" aria-label="Abrir asesor virtual Dereck">
+  <span class="dereck-avatar">D</span><span><b>¿Te ayudo?</b><small>Habla con Dereck</small></span><span class="dereck-online"></span>
+</button>
+<aside class="dereck-panel" id="dereckPanel" aria-label="Asesor virtual Dereck" aria-hidden="true">
+  <div class="dereck-head">
+    <div class="dereck-avatar">D</div><div><strong>Dereck</strong><small>Asesor virtual DAYZEN · En línea</small></div>
+    <button id="dereckClose" type="button" aria-label="Cerrar asesor">×</button>
+  </div>
+  <div class="dereck-chat" id="dereckChat" aria-live="polite">
+    <div class="dereck-message dereck-bot">¡Hola! Soy <b>Dereck</b>, asesor de DAYZEN. ✨ Estoy aquí para ayudarte a encontrar eso que va con tu estilo. ¿Qué te gustaría descubrir hoy?</div>
+    <div class="dereck-options" id="dereckOptions">
+      <button type="button" data-dereck-action="zapatos">👟 Ver zapatos</button>
+      <button type="button" data-dereck-action="perfumes">🌸 Encontrar un perfume</button>
+      <button type="button" data-dereck-action="ropa">👕 Ver ropa</button>
+      <button type="button" data-dereck-action="bienestar">✨ Cuidado y bienestar</button>
+      <button type="button" data-dereck-action="stock">📦 Consultar disponibilidad</button>
+      <button type="button" data-dereck-action="whatsapp">💬 Hablar por WhatsApp</button>
+    </div>
+  </div>
+  <div class="dereck-foot"><span>Atención guiada gratuita</span><button type="button" id="dereckHome">Menú principal</button></div>
+</aside>
+
 <script src="script.js"></script>
 </body></html>
