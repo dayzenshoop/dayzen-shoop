@@ -77,10 +77,10 @@ const wellness = [
 ];
 const shoePhotos=["zapatos/p1-1.png","zapatos/p1-2.png","zapatos/p1-3.png","zapatos/p1-4.png","zapatos/p2-1.png","zapatos/p2-2.png","zapatos/p2-3.png","zapatos/p2-4.png","zapatos/p3-1.png","zapatos/p3-3.png","zapatos/p5-1.png","zapatos/p5-2.png","zapatos/p6-1.png","zapatos/p6-2.png","zapatos/p6-3.png","zapatos/p7-1.png","zapatos/p7-2.png"];
 let cart=[];let shoeBrandFilter='TODAS',perfumeBrandFilter='TODAS',perfumeTypeFilter='todos';const $=s=>document.querySelector(s);const money=n=>'$'+Number(n).toFixed(2);
-const DAYZEN_STORAGE={cart:'dayzen_cart_v3',visits:'dayzen_visits_v1',faq:'dayzen_unanswered_v1',activity:'dayzen_activity_v1'};
+const DAYZEN_STORAGE={cart:'dayzen_cart_v4',visits:'dayzen_visits_v1',faq:'dayzen_unanswered_v1',activity:'dayzen_activity_v1'};
 function safeRead(key,fallback){try{const value=localStorage.getItem(key);return value?JSON.parse(value):fallback}catch(_){return fallback}}
 function safeWrite(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch(_){}}
-function saveCart(){safeWrite(DAYZEN_STORAGE.cart,cart.map(p=>({key:p.key,name:p.name,detail:p.detail,price:p.price,qty:p.qty})));}
+function saveCart(){safeWrite(DAYZEN_STORAGE.cart,cart.map(p=>({key:p.key,name:p.name,detail:p.detail,price:p.price,qty:p.qty,image:p.image||''})));}
 const savedCart=safeRead(DAYZEN_STORAGE.cart,[]);
 if(Array.isArray(savedCart))cart=savedCart.filter(p=>p&&typeof p.key==='string'&&typeof p.name==='string'&&Number.isFinite(Number(p.price))&&Number.isFinite(Number(p.qty))&&Number(p.qty)>0).map(p=>({...p,price:Number(p.price),qty:Math.min(99,Math.floor(Number(p.qty)))}));
 function trackLocal(kind,key){const data=safeRead(DAYZEN_STORAGE.activity,{});data[kind]=data[kind]||{};data[kind][key]=(data[kind][key]||0)+1;safeWrite(DAYZEN_STORAGE.activity,data)}
@@ -88,11 +88,21 @@ function renderShoeBrandTabs(){
  const brands=['TODAS',...new Set(shoes.map(p=>p[0]))];
  $('#shoeBrandTabs').innerHTML=brands.map(b=>`<button type="button" class="brand-tab ${shoeBrandFilter===b?'active':''}" data-shoe-brand="${b}">${b==='TODAS'?'Todas las marcas':b}</button>`).join('');
 }
+function sizeOptions(raw){
+ const value=String(raw||'').trim();
+ if(value.includes(';'))return value.split(';').map(x=>x.trim()).filter(Boolean);
+ if(/\s+y\s+/i.test(value))return value.split(/\s+y\s+/i).map(x=>x.trim()).filter(Boolean);
+ return value?[value]:['Talla única'];
+}
+function sizeSelector(options,type,index){
+ return `<label class="size-picker">Talla disponible<select class="product-size-choice" data-size-type="${type}" data-size-index="${index}">${options.map((v,i)=>`<option value="${i}">${v}</option>`).join('')}</select></label>`;
+}
+function imageUrl(path){return path?new URL(path,'https://dayzenshoop.github.io/dayzen-shoop/').href:''}
 function renderShoes(){
  let q=$('#searchInput').value.toLowerCase(),cat=$('#categoryFilter').value,sort=$('#sortFilter').value;
  let list=shoes.map((p,index)=>({p,index})).filter(({p})=>(cat==='todos'||p[4]===cat)&&(shoeBrandFilter==='TODAS'||p[0]===shoeBrandFilter)&&(p[1]+' '+p[0]+' '+p[2]).toLowerCase().includes(q));
  if(sort==='low')list.sort((a,b)=>a.p[3]-b.p[3]);if(sort==='high')list.sort((a,b)=>b.p[3]-a.p[3]);
- $('#shoeGrid').innerHTML=list.map(({p,index})=>`<article class="product-card"><div class="product-art"><img src="assets/${shoePhotos[index]}" alt="${p[1]}" loading="lazy"></div><div class="product-info"><span class="brand-tag">${p[0]} · ${p[4]==='ninos'?'Niños':'Adultos'}</span><h3>${p[1]}</h3><p>${p[2]}</p><div class="product-bottom"><strong class="price">${money(p[3])}</strong>${p[6]?'<span class="stock">Agotado</span>':`<button class="add-btn" data-shoe="${index}">Agregar +</button>`}</div></div></article>`).join('')||'<p>No encontramos productos con esa marca o búsqueda.</p>';
+ $('#shoeGrid').innerHTML=list.map(({p,index})=>{const sizes=sizeOptions(p[2]);return `<article class="product-card"><div class="product-art"><img src="assets/${shoePhotos[index]}" alt="${p[1]}" loading="lazy"></div><div class="product-info"><span class="brand-tag">${p[0]} · ${p[4]==='ninos'?'Niños':'Adultos'}</span><h3>${p[1]}</h3>${p[6]?`<p>${p[2]}</p>`:sizeSelector(sizes,'shoe',index)}<div class="product-bottom"><strong class="price">${money(p[3])}</strong>${p[6]?'<span class="stock">Agotado</span>':`<button class="add-btn" data-shoe="${index}">Agregar +</button>`}</div></div></article>`}).join('')||'<p>No encontramos productos con esa marca o búsqueda.</p>';
 }
 const perfumeBrandById={
  'yara-tous':'LATTAFA','yara-moi':'LATTAFA','yara-candy':'LATTAFA',
@@ -119,7 +129,7 @@ function renderPerfumes(){
 function renderApparel(){
  const grid=document.querySelector('#apparelGrid');
  const groups=[["Hombre","Hombre"],["Mujer","Mujer"],["Niños","Niños"]];
- grid.innerHTML=groups.map(([key,label])=>`<section class="catalog-group"><h3>${label}</h3><div class="catalog-product-grid">${apparel.map((p,i)=>p[1]===key?`<article class="product-card"><div class="product-art"><img src="${p[5]}" alt="${p[0]}" loading="lazy"></div><div class="product-info"><span class="brand-tag">${p[1].toUpperCase()}</span><h3>${p[0]}</h3><p>Talla: ${p[2]}</p><div class="product-bottom"><strong class="price">${money(p[3])}</strong>${p[4]?'<span class="stock">Agotado</span>':`<button class="add-btn" data-apparel="${i}">Agregar +</button>`}</div></div></article>`:'').join('')}</div></section>`).join('');
+ grid.innerHTML=groups.map(([key,label])=>`<section class="catalog-group"><h3>${label}</h3><div class="catalog-product-grid">${apparel.map((p,i)=>{if(p[1]!==key)return '';const sizes=sizeOptions(p[2]);return `<article class="product-card"><div class="product-art"><img src="${p[5]}" alt="${p[0]}" loading="lazy"></div><div class="product-info"><span class="brand-tag">${p[1].toUpperCase()}</span><h3>${p[0]}</h3>${p[4]?`<p>Talla: ${p[2]}</p>`:sizeSelector(sizes,'apparel',i)}<div class="product-bottom"><strong class="price">${money(p[3])}</strong>${p[4]?'<span class="stock">Agotado</span>':`<button class="add-btn" data-apparel="${i}">Agregar +</button>`}</div></div></article>`}).join('')}</div></section>`).join('');
 }
 function renderWellness(){
  const grid=document.querySelector('#wellnessGrid');
@@ -140,15 +150,15 @@ function updateCart(){
  const t=cartTotals();$('#cartCount').textContent=t.count;
  $('#cartSubtotal').textContent=money(t.subtotal);$('#cartDiscount').textContent='-'+money(t.discount);
  $('#cartDiscountRow').hidden=t.discount===0;$('#cartShipping').textContent=t.shipping===null?'Por calcular':t.shipping===0?'Gratis':money(t.shipping);$('#cartTotal').textContent=t.shipping===null?'Selecciona zona':money(t.total);
- $('#cartItems').innerHTML=cart.length?cart.map((p,i)=>`<div class="cart-row"><div><strong>${p.name}</strong><small>${p.detail||''} · ${money(p.price)} × ${p.qty}</small></div><div><b>${money(p.price*p.qty)}</b><br><button data-remove="${i}">Quitar</button></div></div>`).join('')+'<button type="button" class="cart-clear" id="clearCart">Vaciar bolsa</button>':'<p class="empty">Todavía no agregas productos.</p>';
+ $('#cartItems').innerHTML=cart.length?cart.map((p,i)=>`<div class="cart-row"><div class="cart-thumb-wrap">${p.image?`<img class="cart-thumb" src="${p.image}" alt="${p.name}">`:''}</div><div><strong>${p.name}</strong><small>${p.detail||''} · ${money(p.price)} × ${p.qty}</small></div><div><b>${money(p.price*p.qty)}</b><br><button data-remove="${i}">Quitar</button></div></div>`).join('')+'<button type="button" class="cart-clear" id="clearCart">Vaciar bolsa</button>':'<p class="empty">Todavía no agregas productos.</p>';
  if(cart.length)$('#clearCart').onclick=()=>{if(confirm('¿Deseas vaciar tu bolsa?')){cart=[];saveCart();updateCart()}};
 }
 function openCart(){$('#cartPanel').classList.add('open');$('#cartBackdrop').classList.add('open');$('#cartPanel').setAttribute('aria-hidden','false')}
 function closeCart(){$('#cartPanel').classList.remove('open');$('#cartBackdrop').classList.remove('open');$('#cartPanel').setAttribute('aria-hidden','true')}
-$('#shoeGrid').addEventListener('click',e=>{let b=e.target.closest('[data-shoe]');if(!b)return;let p=shoes[+b.dataset.shoe];addItem({key:'s'+b.dataset.shoe,name:p[1],detail:p[2],price:p[3]})});
-$('#perfumeGrid').addEventListener('click',e=>{let b=e.target.closest('[data-perfume]');if(!b)return;let p=perfumes[+b.dataset.perfume];addItem({key:'p'+b.dataset.perfume,name:p[0],detail:'Perfume',price:p[2]})});
-$('#apparelGrid').addEventListener('click',e=>{let b=e.target.closest('[data-apparel]');if(!b)return;let p=apparel[+b.dataset.apparel];addItem({key:'a'+b.dataset.apparel,name:p[0],detail:'Talla '+p[2],price:p[3]})});
-$('#wellnessGrid').addEventListener('click',e=>{let b=e.target.closest('[data-wellness]');if(!b)return;let p=wellness[+b.dataset.wellness];addItem({key:'w'+b.dataset.wellness,name:p[0],detail:p[1],price:p[2]})});
+$('#shoeGrid').addEventListener('click',e=>{let b=e.target.closest('[data-shoe]');if(!b)return;let i=+b.dataset.shoe,p=shoes[i],sel=$(`#shoeGrid [data-size-type="shoe"][data-size-index="${i}"]`),size=sizeOptions(p[2])[Number(sel?.value||0)],photo='assets/'+shoePhotos[i];addItem({key:'s'+i+':'+size,name:p[1],detail:'Talla '+size,price:p[3],image:photo})});
+$('#perfumeGrid').addEventListener('click',e=>{let b=e.target.closest('[data-perfume]');if(!b)return;let i=+b.dataset.perfume,p=perfumes[i],photo='assets/perfumes/'+p[1]+'.png';addItem({key:'p'+i,name:p[0],detail:'Perfume',price:p[2],image:photo})});
+$('#apparelGrid').addEventListener('click',e=>{let b=e.target.closest('[data-apparel]');if(!b)return;let i=+b.dataset.apparel,p=apparel[i],sel=$(`#apparelGrid [data-size-type="apparel"][data-size-index="${i}"]`),size=sizeOptions(p[2])[Number(sel?.value||0)];addItem({key:'a'+i+':'+size,name:p[0],detail:'Talla '+size,price:p[3],image:p[5]})});
+$('#wellnessGrid').addEventListener('click',e=>{let b=e.target.closest('[data-wellness]');if(!b)return;let i=+b.dataset.wellness,p=wellness[i];addItem({key:'w'+i,name:p[0],detail:p[1],price:p[2],image:p[5]})});
 $('#cartItems').addEventListener('click',e=>{let b=e.target.closest('[data-remove]');if(b){cart.splice(+b.dataset.remove,1);saveCart();updateCart()}});
 $('#shoeBrandTabs').addEventListener('click',e=>{const b=e.target.closest('[data-shoe-brand]');if(!b)return;shoeBrandFilter=b.dataset.shoeBrand;renderShoeBrandTabs();renderShoes()});
 $('#perfumeBrandTabs').addEventListener('click',e=>{const b=e.target.closest('[data-perfume-brand]');if(!b)return;perfumeBrandFilter=b.dataset.perfumeBrand;renderPerfumeBrandTabs();renderPerfumes()});
@@ -156,7 +166,7 @@ $('#perfumeTypeTabs').addEventListener('click',e=>{const b=e.target.closest('[da
 $('#searchInput').addEventListener('input',renderShoes);$('#categoryFilter').addEventListener('change',renderShoes);$('#sortFilter').addEventListener('change',renderShoes);
 $('#openCart').onclick=openCart;$('#closeCart').onclick=closeCart;$('#cartBackdrop').onclick=closeCart;
 $('#shippingZone').addEventListener('change',()=>{const zone=$('#shippingZone').value;if(zone==='galapagos')alert('DAYZEN no realiza envíos a Galápagos.');updateCart()});
-$('#checkout').onclick=()=>{if(!cart.length){alert('Agrega al menos un producto antes de enviar tu pedido.');return}const zone=$('#shippingZone').value;if(!zone){alert('Selecciona tu zona de entrega para calcular el envío.');$('#shippingZone').focus();return}if(zone==='galapagos'){alert('DAYZEN no realiza envíos a Galápagos.');return}const t=cartTotals();const lines=cart.map(p=>`• ${p.name} (${p.detail||'sin detalle'}) x${p.qty} — ${money(p.price*p.qty)}`).join('\n');const name=$('#customerName').value.trim();const address=$('#shippingAddress').value.trim();const zoneLabel=zone==='carapungo'?'Carapungo, Quito':zone==='quito'?'Quito (otros sectores)':'Resto del Ecuador';const msg=`Hola DAYZEN, quiero realizar este pedido.${name?'\nNombre: '+name:''}${address?'\nSector/ciudad: '+address:''}\nZona de entrega: ${zoneLabel}\n\n${lines}\n\nSubtotal: ${money(t.subtotal)}${t.discount?'\nDescuento DAYZEN 10% (una sola vez sobre el producto de mayor valor): -'+money(t.discount):''}\nTotal de productos con descuento: ${money(t.productsTotal)}\nEnvío: ${t.shipping===0?'Gratis':money(t.shipping)}\nTOTAL ESTIMADO DEL PEDIDO: ${money(t.total)}\n\nPor favor confirmen disponibilidad, dirección y forma de pago por WhatsApp.`;window.open('https://wa.me/'+$('#waNumber').value+'?text='+encodeURIComponent(msg),'_blank','noopener')};
+$('#checkout').onclick=()=>{if(!cart.length){alert('Agrega al menos un producto antes de enviar tu pedido.');return}const zone=$('#shippingZone').value;if(!zone){alert('Selecciona tu zona de entrega para calcular el envío.');$('#shippingZone').focus();return}if(zone==='galapagos'){alert('DAYZEN no realiza envíos a Galápagos.');return}const t=cartTotals();const lines=cart.map(p=>`• ${p.name} (${p.detail||'sin detalle'}) x${p.qty} — ${money(p.price*p.qty)}${p.image?'\n  Foto del producto: '+imageUrl(p.image):''}`).join('\n');const name=$('#customerName').value.trim();const address=$('#shippingAddress').value.trim();const zoneLabel=zone==='carapungo'?'Carapungo, Quito':zone==='quito'?'Quito (otros sectores)':'Resto del Ecuador';const msg=`Hola DAYZEN, quiero realizar este pedido.${name?'\nNombre: '+name:''}${address?'\nSector/ciudad: '+address:''}\nZona de entrega: ${zoneLabel}\n\n${lines}\n\nSubtotal: ${money(t.subtotal)}${t.discount?'\nDescuento DAYZEN 10% (una sola vez sobre el producto de mayor valor): -'+money(t.discount):''}\nTotal de productos con descuento: ${money(t.productsTotal)}\nEnvío: ${t.shipping===0?'Gratis':money(t.shipping)}\nTOTAL ESTIMADO DEL PEDIDO: ${money(t.total)}\n\nPor favor confirmen disponibilidad, dirección y forma de pago por WhatsApp.`;window.open('https://wa.me/'+$('#waNumber').value+'?text='+encodeURIComponent(msg),'_blank','noopener')};
 const upcoming=[["ADIDAS CELESTE","zapatos/p3-2.png","Próximo ingreso"],["Próximamente","zapatos/p4-1.png","Talla 41,5 · 26 cm"],["Próximamente","zapatos/p4-2.png","Talla 42 · 26,5 cm"],["Próximamente","zapatos/p4-3.png","Talla 40 · 25 cm"]];
 const upcomingWrap=document.createElement('section');upcomingWrap.className='upcoming-section';upcomingWrap.innerHTML='<h3>Próximamente</h3><div class="upcoming-grid">'+upcoming.map(p=>`<article class="product-card"><div class="product-art"><img src="assets/${p[1]}" alt="${p[0]}"></div><div class="product-info"><span class="brand-tag">NUEVO INGRESO</span><h3>${p[0]}</h3><p>${p[2]}</p><div class="product-bottom"><span class="stock">Próximamente</span></div></div></article>`).join('')+'</div>';$('#shoeGrid').after(upcomingWrap);
 $('#menuToggle').onclick=()=>$('#mainNav').classList.toggle('open');document.querySelectorAll('#mainNav a').forEach(a=>a.addEventListener('click',()=>$('#mainNav').classList.remove('open')));

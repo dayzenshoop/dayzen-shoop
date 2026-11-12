@@ -154,3 +154,60 @@ nav a{font-size:13px}
 .dereck-options{grid-template-columns:1fr 1fr}
 .dereck-back{display:block;margin:10px 0}
 @media(max-width:620px){.dereck-avatar{width:40px;height:40px}.dereck-avatar svg{width:30px;height:30px}}
+
+/* DAYZEN: mejora de lectura de productos en la bolsa de escritorio */
+@media (min-width: 621px){
+  .cart-panel{
+    width:min(480px,100vw);
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  .cart-head{flex:0 0 auto}
+  .cart-items{
+    flex:0 0 auto;
+    min-height:135px;
+    max-height:min(32vh,250px);
+    overflow-y:auto;
+    padding:12px 2px 16px 0;
+  }
+  .cart-row{
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:start;
+    gap:14px;
+    padding:16px 4px;
+  }
+  .cart-row>div:first-child{min-width:0}
+  .cart-row strong{
+    display:block;
+    font-size:13px;
+    line-height:1.45;
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+  .cart-row small{
+    display:block;
+    margin-top:7px;
+    font-size:12px;
+    line-height:1.55;
+    color:#666;
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+  .cart-row>div:last-child{text-align:right;white-space:nowrap}
+  .cart-row>div:last-child b{font-size:13px}
+  .cart-row button{margin-top:6px;font-size:11px;padding:3px 0}
+  .cart-foot{flex:0 0 auto;padding-bottom:22px}
+}
+
+/* En móvil se conserva la distribución que ya se visualiza correctamente. */
+
+/* DAYZEN: selector de tallas disponibles y fotos en la bolsa */
+.size-picker{display:grid;gap:5px;margin:10px 0 13px;font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#77664b}
+.size-picker select{width:100%;min-width:0;padding:9px 11px;border:1px solid #d8cbb5;background:#fff;color:#222;font-size:12px;letter-spacing:0;text-transform:none;border-radius:0}
+.size-picker select:focus{outline:2px solid #c6a46a;outline-offset:1px}
+.cart-row{grid-template-columns:58px minmax(0,1fr) auto;align-items:center}
+.cart-thumb-wrap{width:58px;height:58px;background:#f4f2ed;display:grid;place-items:center;overflow:hidden}
+.cart-thumb{display:block;width:100%;height:100%;object-fit:contain;padding:3px}
+.cart-row>div:nth-child(2){min-width:0}
+@media(max-width:620px){.size-picker{font-size:9px;margin:8px 0 10px}.size-picker select{padding:8px;font-size:11px}.cart-row{grid-template-columns:48px minmax(0,1fr) auto;gap:8px}.cart-thumb-wrap{width:48px;height:48px}}
