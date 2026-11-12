@@ -8,7 +8,7 @@ const shoes = [
 ["ADIDAS","Adidas Samba","41,5 · US 9 · 26 cm",90,"adulto",2,false],
 ["ADIDAS","Adidas VL Court Bold","36,5",85,"adulto",2,true],
 ["ADIDAS","Adidas X_PLRPATH","36 · US 4 · 22,5 cm",60,"adulto",3,false],
-["NIKE","Nike JA 1","38 · US 5.5 · 24 cm",80,"adulto",3,false],
+["NIKE","Nike JA 1","38 · US 5.5 · 24 cm",90,"adulto",3,false],
 ["JORDAN","Jordan Spiziki Low","28 · US 11C · 17 cm",60,"ninos",5,false],
 ["ADIDAS","Adidas Toy Story","28,5 · US 11K · 17 cm; 30 · US 12K · 18 cm; 35 · US 3 · 21,5 cm",80,"ninos",5,false],
 ["ADIDAS","Adidas Grand Court 2.0 CF","27 · US 10K · 16,5 cm",45,"ninos",6,false],
@@ -46,7 +46,7 @@ const apparel = [
 ["Adidas","Mujer","M",35,true,"assets/ropa/ropa-p13-1.jpeg"],
 ["Adidas Umbrellas","Mujer","S",35,false,"assets/ropa/ropa-p13-2.jpeg"],
 ["Rompevientos US Polo Assn.","Mujer","M",70,false,"assets/ropa/ropa-p14-1.jpeg"],
-["Abrigo US Polo Assn.","Mujer","S",35,false,"assets/ropa/ropa-p14-2.jpeg"],
+["Abrigo US Polo Assn.","Mujer","S",60,false,"assets/ropa/ropa-p14-2.jpeg"],
 ["Pantalón Spacedye Beyond Yoga","Mujer","XS",35,false,"assets/ropa/ropa-p15-1.jpeg"],
 ["Pijama conjunto de emociones","Mujer","38 / M",35,false,"assets/ropa/ropa-p15-2.jpeg"],
 ["Conjunto Star Wars","Niños","7",30,false,"assets/ropa/ropa-p16-1.jpeg"],
@@ -76,10 +76,39 @@ const wellness = [
 ["People's Choice – Ácido Fólico, 28 tabletas","Vitaminas y suplementos",5,false,"Vitamina esencial para el crecimiento celular y la formación de tejidos.","assets/bienestar/bienestar-p9-1.jpeg"]
 ];
 const shoePhotos=["zapatos/p1-1.png","zapatos/p1-2.png","zapatos/p1-3.png","zapatos/p1-4.png","zapatos/p2-1.png","zapatos/p2-2.png","zapatos/p2-3.png","zapatos/p2-4.png","zapatos/p3-1.png","zapatos/p3-3.png","zapatos/p5-1.png","zapatos/p5-2.png","zapatos/p6-1.png","zapatos/p6-2.png","zapatos/p6-3.png","zapatos/p7-1.png","zapatos/p7-2.png"];
-let cart=[];const $=s=>document.querySelector(s);const money=n=>'$'+Number(n).toFixed(2);
-function renderShoes(){let q=$('#searchInput').value.toLowerCase(),cat=$('#categoryFilter').value,sort=$('#sortFilter').value;let list=shoes.filter(p=>(cat==='todos'||p[4]===cat)&&(p[1]+' '+p[0]+' '+p[2]).toLowerCase().includes(q));if(sort==='low')list.sort((a,b)=>a[3]-b[3]);if(sort==='high')list.sort((a,b)=>b[3]-a[3]);$('#shoeGrid').innerHTML=list.map((p,i)=>`<article class="product-card"><div class="product-art"><img src="assets/${shoePhotos[shoes.indexOf(p)]}" alt="${p[1]}" loading="lazy"></div><div class="product-info"><span class="brand-tag">${p[0]} · ${p[4]==='ninos'?'Niños':'Adultos'}</span><h3>${p[1]}</h3><p>${p[2]}</p><div class="product-bottom"><strong class="price">${money(p[3])}</strong>${p[6]?'<span class="stock">Agotado</span>':`<button class="add-btn" data-shoe="${shoes.indexOf(p)}">Agregar +</button>`}</div></div></article>`).join('')||'<p>No encontramos productos con esa búsqueda.</p>'}
-function renderPerfumes(){const groups=[["mujer","Mujer"],["hombre","Hombre"],["ninos","Niños"]];$('#perfumeGrid').innerHTML=groups.map(([key,label])=>`<section class="perfume-group"><h3 class="perfume-group-title">${label}</h3><div class="perfume-group-grid">${perfumes.map((p,i)=>p[3]===key?`<article class="perfume-card"><div class="perfume-photo"><img src="assets/perfumes/${p[1]}.png" alt="${p[0]}" loading="lazy"></div><div class="perfume-details"><span class="number">${label.toUpperCase()}</span><h3>${p[0]}</h3><div class="notes"><p><b>Salida:</b> ${p[4]}</p><p><b>Corazón:</b> ${p[5]}</p>${p[6]?`<p><b>Fondo:</b> ${p[6]}</p>`:''}</div><div class="perfume-bottom"><strong>${money(p[2])}</strong>${p[7]?'<span class="stock">Agotado</span>':`<button data-perfume="${i}">Agregar +</button>`}</div></div></article>`:'').join('')}</div></section>`).join('')}
-
+let cart=[];let shoeBrandFilter='TODAS',perfumeBrandFilter='TODAS',perfumeTypeFilter='todos';const $=s=>document.querySelector(s);const money=n=>'$'+Number(n).toFixed(2);
+function renderShoeBrandTabs(){
+ const brands=['TODAS',...new Set(shoes.map(p=>p[0]))];
+ $('#shoeBrandTabs').innerHTML=brands.map(b=>`<button type="button" class="brand-tab ${shoeBrandFilter===b?'active':''}" data-shoe-brand="${b}">${b==='TODAS'?'Todas las marcas':b}</button>`).join('');
+}
+function renderShoes(){
+ let q=$('#searchInput').value.toLowerCase(),cat=$('#categoryFilter').value,sort=$('#sortFilter').value;
+ let list=shoes.map((p,index)=>({p,index})).filter(({p})=>(cat==='todos'||p[4]===cat)&&(shoeBrandFilter==='TODAS'||p[0]===shoeBrandFilter)&&(p[1]+' '+p[0]+' '+p[2]).toLowerCase().includes(q));
+ if(sort==='low')list.sort((a,b)=>a.p[3]-b.p[3]);if(sort==='high')list.sort((a,b)=>b.p[3]-a.p[3]);
+ $('#shoeGrid').innerHTML=list.map(({p,index})=>`<article class="product-card"><div class="product-art"><img src="assets/${shoePhotos[index]}" alt="${p[1]}" loading="lazy"></div><div class="product-info"><span class="brand-tag">${p[0]} · ${p[4]==='ninos'?'Niños':'Adultos'}</span><h3>${p[1]}</h3><p>${p[2]}</p><div class="product-bottom"><strong class="price">${money(p[3])}</strong>${p[6]?'<span class="stock">Agotado</span>':`<button class="add-btn" data-shoe="${index}">Agregar +</button>`}</div></div></article>`).join('')||'<p>No encontramos productos con esa marca o búsqueda.</p>';
+}
+const perfumeBrandById={
+ 'yara-tous':'LATTAFA','yara-moi':'LATTAFA','yara-candy':'LATTAFA',
+ 'tommy-girl':'TOMMY HILFIGER','versace':'VERSACE','jessica-simpson':'JESSICA SIMPSON',
+ '9am':'ARMAF','yum-yum':'ARMAF','guess-girl':'GUESS',
+ 'nautica-blue':'NÁUTICA','adidas-ice-dive':'ADIDAS','asad-bourbon':'LATTAFA',
+ 'asad-lattafa':'LATTAFA','oud-for-glory':'LATTAFA','coach-new-york':'COACH',
+ 'ck-obsession':'CALVIN KLEIN','azzaro-wanted':'AZZARO','burberry-touch':'BURBERRY',
+ 'spiderman':'MARVEL','spiderman-miles-morales':'MARVEL','mickey-mouse':'DISNEY',
+ 'princess-cenicienta':'DISNEY'
+};
+function renderPerfumeBrandTabs(){
+ const brands=['TODAS',...new Set(perfumes.map(p=>perfumeBrandById[p[1]]).filter(Boolean))];
+ $('#perfumeBrandTabs').innerHTML=brands.map(b=>`<button type="button" class="brand-tab ${perfumeBrandFilter===b?'active':''}" data-perfume-brand="${b}">${b==='TODAS'?'Todas las marcas':b}</button>`).join('');
+}
+function renderPerfumes(){
+ const groups=[["mujer","Mujer"],["hombre","Hombre"],["ninos","Niños"]];
+ const visible=perfumes.map((p,i)=>({p,i})).filter(({p})=>(perfumeBrandFilter==='TODAS'||perfumeBrandById[p[1]]===perfumeBrandFilter)&&(perfumeTypeFilter==='todos'||p[3]===perfumeTypeFilter));
+ $('#perfumeGrid').innerHTML=groups.map(([key,label])=>{
+  const items=visible.filter(({p})=>p[3]===key);
+  return items.length?`<section class="perfume-group"><h3 class="perfume-group-title">${label}</h3><div class="perfume-group-grid">${items.map(({p,i})=>`<article class="perfume-card"><div class="perfume-photo"><img src="assets/perfumes/${p[1]}.png" alt="${p[0]}" loading="lazy"></div><div class="perfume-details"><span class="number">${perfumeBrandById[p[1]]||'PERFUME'} · ${label.toUpperCase()}</span><h3>${p[0]}</h3><div class="notes"><p><b>Salida:</b> ${p[4]}</p><p><b>Corazón:</b> ${p[5]}</p>${p[6]?`<p><b>Fondo:</b> ${p[6]}</p>`:''}</div><div class="perfume-bottom"><strong>${money(p[2])}</strong>${p[7]?'<span class="stock">Agotado</span>':`<button data-perfume="${i}">Agregar +</button>`}</div></div></article>`).join('')}</div></section>`:'';
+ }).join('')||'<p>No hay perfumes para esta marca o categoría.</p>';
+}
 function renderApparel(){
  const grid=document.querySelector('#apparelGrid');
  const groups=[["Hombre","Hombre"],["Mujer","Mujer"],["Niños","Niños"]];
@@ -99,13 +128,16 @@ $('#perfumeGrid').addEventListener('click',e=>{let b=e.target.closest('[data-per
 $('#apparelGrid').addEventListener('click',e=>{let b=e.target.closest('[data-apparel]');if(!b)return;let p=apparel[+b.dataset.apparel];addItem({key:'a'+b.dataset.apparel,name:p[0],detail:'Talla '+p[2],price:p[3]})});
 $('#wellnessGrid').addEventListener('click',e=>{let b=e.target.closest('[data-wellness]');if(!b)return;let p=wellness[+b.dataset.wellness];addItem({key:'w'+b.dataset.wellness,name:p[0],detail:p[1],price:p[2]})});
 $('#cartItems').addEventListener('click',e=>{let b=e.target.closest('[data-remove]');if(b){cart.splice(+b.dataset.remove,1);updateCart()}});
+$('#shoeBrandTabs').addEventListener('click',e=>{const b=e.target.closest('[data-shoe-brand]');if(!b)return;shoeBrandFilter=b.dataset.shoeBrand;renderShoeBrandTabs();renderShoes()});
+$('#perfumeBrandTabs').addEventListener('click',e=>{const b=e.target.closest('[data-perfume-brand]');if(!b)return;perfumeBrandFilter=b.dataset.perfumeBrand;renderPerfumeBrandTabs();renderPerfumes()});
+$('#perfumeTypeTabs').addEventListener('click',e=>{const b=e.target.closest('[data-perfume-type]');if(!b)return;perfumeTypeFilter=b.dataset.perfumeType;document.querySelectorAll('#perfumeTypeTabs .brand-tab').forEach(x=>x.classList.toggle('active',x===b));renderPerfumes()});
 $('#searchInput').addEventListener('input',renderShoes);$('#categoryFilter').addEventListener('change',renderShoes);$('#sortFilter').addEventListener('change',renderShoes);
 $('#openCart').onclick=openCart;$('#closeCart').onclick=closeCart;$('#cartBackdrop').onclick=closeCart;
 $('#checkout').onclick=()=>{if(!cart.length){alert('Agrega al menos un producto antes de enviar tu pedido.');return}let total=cart.reduce((n,p)=>n+p.price*p.qty,0);let lines=cart.map(p=>`• ${p.name} (${p.detail||'sin detalle'}) x${p.qty} — ${money(p.price*p.qty)}`).join('\n');let name=$('#customerName').value.trim();let msg=`Hola DAYZEN, quiero realizar este pedido.${name?'\nNombre: '+name:''}\n\n${lines}\n\nTotal estimado: ${money(total)}\nPor favor confirmen disponibilidad, entrega y forma de pago.`;window.open('https://wa.me/'+$('#waNumber').value+'?text='+encodeURIComponent(msg),'_blank','noopener')};
 const upcoming=[["ADIDAS CELESTE","zapatos/p3-2.png","Próximo ingreso"],["Próximamente","zapatos/p4-1.png","Talla 41,5 · 26 cm"],["Próximamente","zapatos/p4-2.png","Talla 42 · 26,5 cm"],["Próximamente","zapatos/p4-3.png","Talla 40 · 25 cm"]];
 const upcomingWrap=document.createElement('section');upcomingWrap.className='upcoming-section';upcomingWrap.innerHTML='<h3>Próximamente</h3><div class="upcoming-grid">'+upcoming.map(p=>`<article class="product-card"><div class="product-art"><img src="assets/${p[1]}" alt="${p[0]}"></div><div class="product-info"><span class="brand-tag">NUEVO INGRESO</span><h3>${p[0]}</h3><p>${p[2]}</p><div class="product-bottom"><span class="stock">Próximamente</span></div></div></article>`).join('')+'</div>';$('#shoeGrid').after(upcomingWrap);
 $('#menuToggle').onclick=()=>$('#mainNav').classList.toggle('open');document.querySelectorAll('#mainNav a').forEach(a=>a.addEventListener('click',()=>$('#mainNav').classList.remove('open')));
-$('#year').textContent=new Date().getFullYear();renderShoes();renderPerfumes();updateCart();
+$('#year').textContent=new Date().getFullYear();renderShoeBrandTabs();renderPerfumeBrandTabs();renderShoes();renderPerfumes();updateCart();
 
 renderApparel();
 renderWellness();
