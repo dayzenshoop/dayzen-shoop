@@ -84,6 +84,50 @@ function saveCart(){safeWrite(DAYZEN_STORAGE.cart,cart.map(p=>({key:p.key,name:p
 const savedCart=safeRead(DAYZEN_STORAGE.cart,[]);
 if(Array.isArray(savedCart))cart=savedCart.filter(p=>p&&typeof p.key==='string'&&typeof p.name==='string'&&Number.isFinite(Number(p.price))&&Number.isFinite(Number(p.qty))&&Number(p.qty)>0).map(p=>({...p,price:Number(p.price),qty:Math.min(99,Math.floor(Number(p.qty)))}));
 function trackLocal(kind,key){const data=safeRead(DAYZEN_STORAGE.activity,{});data[kind]=data[kind]||{};data[kind][key]=(data[kind][key]||0)+1;safeWrite(DAYZEN_STORAGE.activity,data)}
+
+// Google Analytics 4: eventos de comercio electrónico DAYZEN.
+function gaEvent(name,params={}){
+ if(typeof window.gtag==='function') window.gtag('event',name,params);
+}
+function gaItem(item,category){
+ return {
+  item_id:String(item.key||((category||'producto')+'_'+String(item.name||'').toLowerCase().replace(/[^a-z0-9]+/g,'_'))),
+  item_name:String(item.name||'Producto'),
+  item_category:String(category||'Otros'),
+  price:Number(item.price)||0,
+  quantity:1
+ };
+}
+const gaViewedProducts=new Set();
+function observeProductViews(){
+ const cards=document.querySelectorAll('#zapatos .product-card, #zapatos .perfume-card, #perfumes .product-card, #perfumes .perfume-card, #ropa .product-card, #ropa .perfume-card, #bienestar .product-card, #bienestar .perfume-card');
+ const sendView=card=>{
+  if(gaViewedProducts.has(card))return;
+  const title=card.querySelector('.product-info h3, .perfume-details h3, h3');
+  if(!title)return;
+  const name=title.textContent.trim();
+  const section=card.closest('#zapatos, #perfumes, #ropa, #bienestar');
+  const category=section?.id==='zapatos'?'Calzado':section?.id==='perfumes'?'Perfumes':section?.id==='ropa'?'Ropa':section?.id==='bienestar'?'Cuidado y bienestar':'Otros';
+  const priceNode=card.querySelector('.price, .perfume-bottom strong, .product-bottom strong');
+  const price=priceNode?Number((priceNode.textContent.match(/[\d.]+/)||[])[0])||0:0;
+  const brand=card.querySelector('.brand-tag, .number')?.textContent.trim()||'';
+  const item=gaItem({name,price,key:category+'_'+name},category);
+  if(brand)item.item_brand=brand;
+  gaEvent('view_item',{currency:'USD',value:price,items:[item]});
+  gaViewedProducts.add(card);
+ };
+ if('IntersectionObserver' in window){
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+   if(entry.isIntersecting){sendView(entry.target);observer.unobserve(entry.target)}
+  }),{threshold:0.5});
+  cards.forEach(card=>{if(!gaViewedProducts.has(card))observer.observe(card)});
+ }else cards.forEach(sendView);
+}
+document.addEventListener('click',event=>{
+ const link=event.target.closest('a[href*="wa.me/"]');
+ if(link)gaEvent('whatsapp_click',{link_url:link.href,link_text:(link.textContent||'').trim(),placement:'contact'});
+});
+
 function renderShoeBrandTabs(){
  const brands=['TODAS',...new Set(shoes.map(p=>p[0]))];
  $('#shoeBrandTabs').innerHTML=brands.map(b=>`<button type="button" class="brand-tab ${shoeBrandFilter===b?'active':''}" data-shoe-brand="${b}">${b==='TODAS'?'Todas las marcas':b}</button>`).join('');
@@ -136,7 +180,7 @@ function renderWellness(){
  const groups=["Splash y cuidado personal","Vitaminas y suplementos"];
  grid.innerHTML=groups.map(label=>`<section class="catalog-group"><h3>${label}</h3><div class="catalog-product-grid">${wellness.map((p,i)=>p[1]===label?`<article class="product-card"><div class="product-art"><img src="${p[5]}" alt="${p[0]}" loading="lazy"></div><div class="product-info"><span class="brand-tag">${label.toUpperCase()}</span><h3>${p[0]}</h3>${p[4]?`<p class="product-description">${p[4]}</p>`:''}<div class="product-bottom"><strong class="price">${money(p[2])}</strong>${p[3]?'<span class="stock">Agotado</span>':`<button class="add-btn" data-wellness="${i}">Agregar +</button>`}</div></div></article>`:'').join('')}</div></section>`).join('');
 }
-function addItem(item){let old=cart.find(c=>c.key===item.key);if(old)old.qty++;else cart.push({...item,qty:1});saveCart();trackLocal('added',item.key);updateCart();openCart()}
+function addItem(item){let old=cart.find(c=>c.key===item.key);if(old)old.qty++;else cart.push({...item,qty:1});saveCart();trackLocal('added',item.key);const category=item.key?.startsWith('s')?'Calzado':item.key?.startsWith('p')?'Perfumes':item.key?.startsWith('a')?'Ropa':item.key?.startsWith('w')?'Cuidado y bienestar':'Otros';gaEvent('add_to_cart',{currency:'USD',value:Number(item.price)||0,items:[gaItem(item,category)]});updateCart();openCart()}
 function shippingCost(){const zone=$('#shippingZone')?.value||'';return zone==='carapungo'?0:zone==='quito'?3:zone==='national'?6:null}
 function cartTotals(){
  const count=cart.reduce((n,p)=>n+p.qty,0);
@@ -166,7 +210,7 @@ $('#perfumeTypeTabs').addEventListener('click',e=>{const b=e.target.closest('[da
 $('#searchInput').addEventListener('input',renderShoes);$('#categoryFilter').addEventListener('change',renderShoes);$('#sortFilter').addEventListener('change',renderShoes);
 $('#openCart').onclick=openCart;$('#closeCart').onclick=closeCart;$('#cartBackdrop').onclick=closeCart;
 $('#shippingZone').addEventListener('change',()=>{const zone=$('#shippingZone').value;if(zone==='galapagos')alert('DAYZEN no realiza envíos a Galápagos.');updateCart()});
-$('#checkout').onclick=()=>{if(!cart.length){alert('Agrega al menos un producto antes de enviar tu pedido.');return}const zone=$('#shippingZone').value;if(!zone){alert('Selecciona tu zona de entrega para calcular el envío.');$('#shippingZone').focus();return}if(zone==='galapagos'){alert('DAYZEN no realiza envíos a Galápagos.');return}const t=cartTotals();const lines=cart.map(p=>`• ${p.name} (${p.detail||'sin detalle'}) x${p.qty} — ${money(p.price*p.qty)}${p.image?'\n  Foto del producto: '+imageUrl(p.image):''}`).join('\n');const name=$('#customerName').value.trim();const address=$('#shippingAddress').value.trim();const zoneLabel=zone==='carapungo'?'Carapungo, Quito':zone==='quito'?'Quito (otros sectores)':'Resto del Ecuador';const msg=`Hola DAYZEN, quiero realizar este pedido.${name?'\nNombre: '+name:''}${address?'\nSector/ciudad: '+address:''}\nZona de entrega: ${zoneLabel}\n\n${lines}\n\nSubtotal: ${money(t.subtotal)}${t.discount?'\nDescuento DAYZEN 10% (una sola vez sobre el producto de mayor valor): -'+money(t.discount):''}\nTotal de productos con descuento: ${money(t.productsTotal)}\nEnvío: ${t.shipping===0?'Gratis':money(t.shipping)}\nTOTAL ESTIMADO DEL PEDIDO: ${money(t.total)}\n\nPor favor confirmen disponibilidad, dirección y forma de pago por WhatsApp.`;window.open('https://wa.me/'+$('#waNumber').value+'?text='+encodeURIComponent(msg),'_blank','noopener')};
+$('#checkout').onclick=()=>{if(!cart.length){alert('Agrega al menos un producto antes de enviar tu pedido.');return}const zone=$('#shippingZone').value;if(!zone){alert('Selecciona tu zona de entrega para calcular el envío.');$('#shippingZone').focus();return}if(zone==='galapagos'){alert('DAYZEN no realiza envíos a Galápagos.');return}const t=cartTotals();gaEvent('begin_checkout',{currency:'USD',value:t.productsTotal,items:cart.map(p=>({...gaItem(p,p.key?.startsWith('s')?'Calzado':p.key?.startsWith('p')?'Perfumes':p.key?.startsWith('a')?'Ropa':'Cuidado y bienestar'),quantity:p.qty}))});const lines=cart.map(p=>`• ${p.name} (${p.detail||'sin detalle'}) x${p.qty} — ${money(p.price*p.qty)}${p.image?'\n  Foto del producto: '+imageUrl(p.image):''}`).join('\n');const name=$('#customerName').value.trim();const address=$('#shippingAddress').value.trim();const zoneLabel=zone==='carapungo'?'Carapungo, Quito':zone==='quito'?'Quito (otros sectores)':'Resto del Ecuador';const msg=`Hola DAYZEN, quiero realizar este pedido.${name?'\nNombre: '+name:''}${address?'\nSector/ciudad: '+address:''}\nZona de entrega: ${zoneLabel}\n\n${lines}\n\nSubtotal: ${money(t.subtotal)}${t.discount?'\nDescuento DAYZEN 10% (una sola vez sobre el producto de mayor valor): -'+money(t.discount):''}\nTotal de productos con descuento: ${money(t.productsTotal)}\nEnvío: ${t.shipping===0?'Gratis':money(t.shipping)}\nTOTAL ESTIMADO DEL PEDIDO: ${money(t.total)}\n\nPor favor confirmen disponibilidad, dirección y forma de pago por WhatsApp.`;gaEvent('whatsapp_click',{link_url:'https://wa.me/'+$('#waNumber').value,placement:'checkout'});window.open('https://wa.me/'+$('#waNumber').value+'?text='+encodeURIComponent(msg),'_blank','noopener')};
 const upcoming=[["ADIDAS CELESTE","zapatos/p3-2.png","Próximo ingreso"],["Próximamente","zapatos/p4-1.png","Talla 41,5 · 26 cm"],["Próximamente","zapatos/p4-2.png","Talla 42 · 26,5 cm"],["Próximamente","zapatos/p4-3.png","Talla 40 · 25 cm"]];
 const upcomingWrap=document.createElement('section');upcomingWrap.className='upcoming-section';upcomingWrap.innerHTML='<h3>Próximamente</h3><div class="upcoming-grid">'+upcoming.map(p=>`<article class="product-card"><div class="product-art"><img src="assets/${p[1]}" alt="${p[0]}"></div><div class="product-info"><span class="brand-tag">NUEVO INGRESO</span><h3>${p[0]}</h3><p>${p[2]}</p><div class="product-bottom"><span class="stock">Próximamente</span></div></div></article>`).join('')+'</div>';$('#shoeGrid').after(upcomingWrap);
 $('#menuToggle').onclick=()=>$('#mainNav').classList.toggle('open');document.querySelectorAll('#mainNav a').forEach(a=>a.addEventListener('click',()=>$('#mainNav').classList.remove('open')));
@@ -174,6 +218,7 @@ $('#year').textContent=new Date().getFullYear();renderShoeBrandTabs();renderPerf
 
 renderApparel();
 renderWellness();
+observeProductViews();
 if(cart.length){updateCart();const restoreNote=document.createElement('p');restoreNote.className='cart-restore-note';restoreNote.textContent='Tu bolsa anterior está guardada en este navegador.';$('#cartItems').prepend(restoreNote)}
 
 
@@ -222,7 +267,7 @@ function dereckGift(raw){
 }
 function dereckPromotion(){dereckMessage('<b>¡Tenemos un beneficio para ti! ✨</b><br>Al llevar 2 o más productos, recibes <b>10% de descuento una sola vez sobre el producto de mayor precio</b>. Se calcula automáticamente en tu bolsa y se refleja en el total antes de enviar tu pedido.')}
 function dereckShipping(){dereckMessage('<b>🚚 Entregas y envíos DAYZEN</b><br>• <b>Carapungo, Quito:</b> entrega gratuita.<br>• <b>Dentro de Quito:</b> $3 por envío.<br>• <b>Resto del Ecuador:</b> $6 por Servientrega.<br>• <b>Galápagos:</b> no realizamos envíos.<br><br>Los envíos nacionales se realizan por Servientrega después de confirmar el pago mediante WhatsApp. El costo final se confirma con nuestro equipo.')}
-function dereckWhatsApp(question=''){const msg=encodeURIComponent('Hola DAYZEN, estoy conversando con Dereck y quisiera recibir asesoría.'+(question?' Mi pregunta es: '+question:''));window.open('https://wa.me/593967090982?text='+msg,'_blank','noopener')}
+function dereckWhatsApp(question=''){const msg=encodeURIComponent('Hola DAYZEN, estoy conversando con Dereck y quisiera recibir asesoría.'+(question?' Mi pregunta es: '+question:''));gaEvent('whatsapp_click',{link_url:'https://wa.me/593967090982',placement:'dereck'});window.open('https://wa.me/593967090982?text='+msg,'_blank','noopener')}
 function dereckAnswer(raw){
  const q=dereckNormalize(raw);trackLocal('questions',q.slice(0,90));
  if(/(descuento|promocion|rebaja|oferta|dos productos|2 productos|segunda unidad)/.test(q)){dereckPromotion();return}
