@@ -15,7 +15,11 @@ const shoes = [
 ["ADIDAS","Adidas Samba Adifom","27 · US 10K · 16,5 cm",60,"ninos",6,false],
 ["ADIDAS","Adidas Samba clásicas","27 · US 10K · 16,5 cm",75,"ninos",6,false],
 ["ADIDAS","Adidas VL Court 3.0 K","31 · US 13K · 19 cm; 33,5 · talla US no legible",40,"ninos",7,false],
-["ADIDAS","Adidas VL Court 3.0 K","35 · US 3 · 21,5 cm",65,"ninos",7,false]
+["ADIDAS","Adidas VL Court 3.0 K","35 · US 3 · 21,5 cm",65,"ninos",7,false],
+["PUMA","PUMA VIZ RUNNER","Talla 39 · US 7 · 25 cm",65,"adulto",8,false],
+["NIKE","NIKE AIR FORCE 1","Talla 40 · US 8.5 · 25,5 cm",130,"adulto",8,false],
+["JORDAN","AIR JORDAN 4 RM","Talla 41 · US 8 · 26 cm",140,"adulto",8,true],
+["ADIDAS","ADIDAS SAMBA 360","Talla 25 · US 8K · 14,5 cm",60,"ninos",8,false]
 ];
 const perfumes = [["Yara Tous", "yara-tous", 40, "mujer", "Mango, coco y maracuyá", "Jazmín, heliotropo y flor de azahar del naranjo", "Vainilla, almizcle y cachemira", true], ["Yara Moi", "yara-moi", 40, "mujer", "Jazmín y melocotón", "Caramelo y ámbar", "Pachulí y sándalo", true], ["Yara Candy", "yara-candy", 40, "mujer", "Grosellas negras y mandarina verde", "Caramelo de fresa efervescente y gardenia", "Vainilla, almizcle, ámbar y sándalo", true], ["Tommy Girl", "tommy-girl", 45, "mujer", "Manzano en flor, camelia, mandarina y grosellas negras", "Limón, madreselva, rosa, toronja, azucena, menta y violeta", "Magnolia, jazmín, cedro, sándalo y cuero", false], ["Versace", "versace", 75, "mujer", "Yazu, acorde helado y granada", "Peonía, magnolia y flor de loto", "Acajou, ámbar vegetal y almizcle", false], ["Jessica Simpson", "jessica-simpson", 45, "mujer", "Flor de durazno, champaña y bergamota", "Frangipani, jazmín, peonía, flor de loto y rosa", "Ámbar, almizcle, notas amaderadas y pachulí", false], ["9 AM", "9am", 45, "mujer", "Mandarina, bergamota y pomelo", "Grosella negra y frambuesa", "Almizcle, ámbar y naranja", false], ["Yum Yum EDP Armaf", "yum-yum", 70, "mujer", "Mandarina, bergamota y pomelo", "Grosella negra y frambuesa", "Almizcle, ámbar y naranja", false], ["Guess Girl", "guess-girl", 40, "mujer", "Frambuesa, melón y bergamota", "Orquídea, lirio y acacia", "Vainilla de Madagascar y sándalo australiano", false], ["Náutica Blue", "nautica-blue", 35, "hombre", "Bergamota, hojas de albahaca y menta", "Salvia, enebro y geranio", "Sándalo, ámbar y almizcle", false], ["Adidas Ice Dive", "adidas-ice-dive", 35, "hombre", "Menta y pomelo", "Notas acuáticas y especiadas", "Notas amaderadas y almizcle", false], ["Asad Bourbon", "asad-bourbon", 40, "hombre", "Lavanda, pimienta rosa y ciruela mirabel", "Cacao, davana y nuez moscada", "Vainilla Bourbon, ámbar y vetiver", false], ["Asad Lattafa", "asad-lattafa", 45, "hombre", "Pimienta negra, piña y tabaco", "Café, pachulí e iris", "Vainilla, ámbar, maderas secas, benjuí y ládano", false], ["Oud for Glory", "oud-for-glory", 45, "hombre", "Azafrán, nuez moscada y lavanda", "Oud (madera de agar) y pachulí", "Oud, pachulí y almizcle", false], ["Coach New York", "coach-new-york", 65, "hombre", "Lima, ajenjo y pomelo", "Acuerdo de ozono y pimienta azul", "Madera de cedro, ámbar y sándalo", true], ["Calvin Klein Obsession", "ck-obsession", 45, "hombre", "Bergamota, mandarina, limón y lima", "Canela, nuez moscada, jazmín, sándalo y cilantro", "Ámbar, almizcle, vainilla, tabaco y musgo de roble", false], ["Azzaro Wanted", "azzaro-wanted", 60, "hombre", "Limón, jengibre, lavanda y menta", "Manzana, enebro, cardamomo de Guatemala y geranio", "Haba tonka, madera de ámbar y vetiver de Haití", false], ["Burberry Touch", "burberry-touch", 70, "hombre", "Artemisa, hoja de violeta y mandarina", "Nuez moscada, pimienta blanca y madera de cedro de Virginia", "Vetiver, haba tonka y almizcle", false], ["Spiderman", "spiderman", 25, "ninos", "Aromas frescos y cítricos", "Agradables y suaves en la piel de los niños", "", false], ["Spiderman Miles Morales", "spiderman-miles-morales", 25, "ninos", "Aromas frescos y especiados", "Agradables y suaves en la piel de los niños", "", false], ["Mickey Mouse", "mickey-mouse", 25, "ninos", "Aromas frescos y suaves", "Agradables y suaves en la piel de los niños", "", true], ["Princess Cenicienta", "princess-cenicienta", 25, "ninos", "Familia olfativa floral frutal", "Agradables y suaves en la piel de los niños", "", true]]
 
@@ -54,7 +58,10 @@ const apparel = [
 ["Sudadera DBZ","Niños","8",30,false,"assets/ropa/ropa-p17-1.jpeg"],
 ["Conjunto Reebok","Niños","4",30,false,"assets/ropa/ropa-p17-2.jpeg"],
 ["Conjunto Marvel","Niños","4",35,false,"assets/ropa/ropa-p18-1.jpeg"],
-["Conjunto Marvel Heroes","Niños","4",35,false,"assets/ropa/ropa-p18-2.jpeg"]
+["Conjunto Marvel Heroes","Niños","4",35,false,"assets/ropa/ropa-p18-2.jpeg"],
+["Vestido KENSIE GIRL","Niños","SIZE 5 y SIZE 8",35,false,"assets/ropa/nuevo-kensie-girl.jpeg",true],
+["CONJUNTO AMERICAN HAWK","Niños","SIZE 7",35,false,"assets/ropa/nuevo-american-hawk.jpeg"],
+["CONJUNTO RACHEL ZOE","Niños","SIZE 4",39,false,"assets/ropa/nuevo-rachel-zoe.jpeg"]
 ];
 const wellness = [
 ["Splash Victoria's Secret – Merry Delights","Splash y cuidado personal",15,false,"","assets/bienestar/bienestar-p1-1.jpeg"],
@@ -75,7 +82,7 @@ const wellness = [
 ["Continuum – Vitamina D3, 36 cápsulas","Vitaminas y suplementos",5,false,"Ayuda al cuerpo a absorber el calcio y contribuye al mantenimiento de huesos y dientes y al funcionamiento del sistema inmunitario.","assets/bienestar/bienestar-p8-2.jpeg"],
 ["People's Choice – Ácido Fólico, 28 tabletas","Vitaminas y suplementos",5,false,"Vitamina esencial para el crecimiento celular y la formación de tejidos.","assets/bienestar/bienestar-p9-1.jpeg"]
 ];
-const shoePhotos=["zapatos/p1-1.png","zapatos/p1-2.png","zapatos/p1-3.png","zapatos/p1-4.png","zapatos/p2-1.png","zapatos/p2-2.png","zapatos/p2-3.png","zapatos/p2-4.png","zapatos/p3-1.png","zapatos/p3-3.png","zapatos/p5-1.png","zapatos/p5-2.png","zapatos/p6-1.png","zapatos/p6-2.png","zapatos/p6-3.png","zapatos/p7-1.png","zapatos/p7-2.png"];
+const shoePhotos=["zapatos/p1-1.png","zapatos/p1-2.png","zapatos/p1-3.png","zapatos/p1-4.png","zapatos/p2-1.png","zapatos/p2-2.png","zapatos/p2-3.png","zapatos/p2-4.png","zapatos/p3-1.png","zapatos/p3-3.png","zapatos/p5-1.png","zapatos/p5-2.png","zapatos/p6-1.png","zapatos/p6-2.png","zapatos/p6-3.png","zapatos/p7-1.png","zapatos/p7-2.png","zapatos/nuevo-puma-viz-runner.jpeg","zapatos/nuevo-nike-air-force-1.jpeg","zapatos/nuevo-air-jordan-4-rm.jpeg","zapatos/nuevo-adidas-samba-360.jpeg"];
 let cart=[];let shoeBrandFilter='TODAS',perfumeBrandFilter='TODAS',perfumeTypeFilter='todos';const $=s=>document.querySelector(s);const money=n=>'$'+Number(n).toFixed(2);
 const DAYZEN_STORAGE={cart:'dayzen_cart_v4',visits:'dayzen_visits_v1',faq:'dayzen_unanswered_v1',activity:'dayzen_activity_v1'};
 function safeRead(key,fallback){try{const value=localStorage.getItem(key);return value?JSON.parse(value):fallback}catch(_){return fallback}}
@@ -128,6 +135,27 @@ document.addEventListener('click',event=>{
  if(link)gaEvent('whatsapp_click',{link_url:link.href,link_text:(link.textContent||'').trim(),placement:'contact'});
 });
 
+// Ampliación de fotografías de productos: disponible en ropa, zapatos, perfumes y bienestar.
+const dayzenImageModal=document.createElement('div');
+dayzenImageModal.className='dayzen-image-modal';
+dayzenImageModal.setAttribute('aria-hidden','true');
+dayzenImageModal.innerHTML='<button type="button" class="dayzen-image-close" aria-label="Cerrar imagen">×</button><img alt="Imagen ampliada del producto">';
+document.body.appendChild(dayzenImageModal);
+function closeDayzenImage(){dayzenImageModal.classList.remove('open');dayzenImageModal.setAttribute('aria-hidden','true');dayzenImageModal.querySelector('img').src='';}
+document.addEventListener('click',event=>{
+ const close=event.target.closest('.dayzen-image-close');
+ if(close||event.target===dayzenImageModal){closeDayzenImage();return;}
+ const productImage=event.target.closest('.product-card img, .perfume-card img');
+ if(productImage){
+  const enlarged=dayzenImageModal.querySelector('img');
+  enlarged.src=productImage.currentSrc||productImage.src;
+  enlarged.alt=productImage.alt||'Imagen ampliada del producto';
+  dayzenImageModal.classList.add('open');
+  dayzenImageModal.setAttribute('aria-hidden','false');
+ }
+});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&dayzenImageModal.classList.contains('open'))closeDayzenImage();});
+
 function renderShoeBrandTabs(){
  const brands=['TODAS',...new Set(shoes.map(p=>p[0]))];
  $('#shoeBrandTabs').innerHTML=brands.map(b=>`<button type="button" class="brand-tab ${shoeBrandFilter===b?'active':''}" data-shoe-brand="${b}">${b==='TODAS'?'Todas las marcas':b}</button>`).join('');
@@ -146,7 +174,7 @@ function renderShoes(){
  let q=$('#searchInput').value.toLowerCase(),cat=$('#categoryFilter').value,sort=$('#sortFilter').value;
  let list=shoes.map((p,index)=>({p,index})).filter(({p})=>(cat==='todos'||p[4]===cat)&&(shoeBrandFilter==='TODAS'||p[0]===shoeBrandFilter)&&(p[1]+' '+p[0]+' '+p[2]).toLowerCase().includes(q));
  if(sort==='low')list.sort((a,b)=>a.p[3]-b.p[3]);if(sort==='high')list.sort((a,b)=>b.p[3]-a.p[3]);
- $('#shoeGrid').innerHTML=list.map(({p,index})=>{const sizes=sizeOptions(p[2]);return `<article class="product-card"><div class="product-art"><img src="assets/${shoePhotos[index]}" alt="${p[1]}" loading="lazy"></div><div class="product-info"><span class="brand-tag">${p[0]} · ${p[4]==='ninos'?'Niños':'Adultos'}</span><h3>${p[1]}</h3>${p[6]?`<p>${p[2]}</p>`:sizeSelector(sizes,'shoe',index)}<div class="product-bottom"><strong class="price">${money(p[3])}</strong>${p[6]?'<span class="stock">Agotado</span>':`<button class="add-btn" data-shoe="${index}">Agregar +</button>`}</div></div></article>`}).join('')||'<p>No encontramos productos con esa marca o búsqueda.</p>';
+ $('#shoeGrid').innerHTML=list.map(({p,index})=>{const sizes=sizeOptions(p[2]);const sizeUI=sizes.length>2?sizeSelector(sizes,'shoe',index):`<p>Talla disponible: ${p[2]}</p>`;return `<article class="product-card"><div class="product-art"><img src="assets/${shoePhotos[index]}" alt="${p[1]}" loading="lazy"></div><div class="product-info"><span class="brand-tag">${p[0]} · ${p[4]==='ninos'?'Niños':'Adultos'}</span><h3>${p[1]}</h3>${p[6]?`<p>${p[2]}</p>`:sizeUI}<div class="product-bottom"><strong class="price">${money(p[3])}</strong>${p[6]?'<span class="stock">Agotado</span>':`<button class="add-btn" data-shoe="${index}">Agregar +</button>`}</div></div></article>`}).join('')||'<p>No encontramos productos con esa marca o búsqueda.</p>';
 }
 const perfumeBrandById={
  'yara-tous':'LATTAFA','yara-moi':'LATTAFA','yara-candy':'LATTAFA',
@@ -173,7 +201,7 @@ function renderPerfumes(){
 function renderApparel(){
  const grid=document.querySelector('#apparelGrid');
  const groups=[["Hombre","Hombre"],["Mujer","Mujer"],["Niños","Niños"]];
- grid.innerHTML=groups.map(([key,label])=>`<section class="catalog-group"><h3>${label}</h3><div class="catalog-product-grid">${apparel.map((p,i)=>{if(p[1]!==key)return '';const sizes=sizeOptions(p[2]);return `<article class="product-card"><div class="product-art"><img src="${p[5]}" alt="${p[0]}" loading="lazy"></div><div class="product-info"><span class="brand-tag">${p[1].toUpperCase()}</span><h3>${p[0]}</h3>${p[4]?`<p>Talla: ${p[2]}</p>`:sizeSelector(sizes,'apparel',i)}<div class="product-bottom"><strong class="price">${money(p[3])}</strong>${p[4]?'<span class="stock">Agotado</span>':`<button class="add-btn" data-apparel="${i}">Agregar +</button>`}</div></div></article>`}).join('')}</div></section>`).join('');
+ grid.innerHTML=groups.map(([key,label])=>`<section class="catalog-group"><h3>${label}</h3><div class="catalog-product-grid">${apparel.map((p,i)=>{if(p[1]!==key)return '';const sizes=sizeOptions(p[2]);const sizeUI=p[6]===true||sizes.length>2?sizeSelector(sizes,'apparel',i):`<p>Talla disponible: ${p[2]}</p>`;return `<article class="product-card"><div class="product-art"><img src="${p[5]}" alt="${p[0]}" loading="lazy"></div><div class="product-info"><span class="brand-tag">${p[1].toUpperCase()}</span><h3>${p[0]}</h3>${p[4]?`<p>Talla: ${p[2]}</p>`:sizeUI}<div class="product-bottom"><strong class="price">${money(p[3])}</strong>${p[4]?'<span class="stock">Agotado</span>':`<button class="add-btn" data-apparel="${i}">Agregar +</button>`}</div></div></article>`}).join('')}</div></section>`).join('');
 }
 function renderWellness(){
  const grid=document.querySelector('#wellnessGrid');
