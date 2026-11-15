@@ -213,49 +213,19 @@ nav a{font-size:13px}
 @media(max-width:620px){.size-picker{font-size:9px;margin:8px 0 10px}.size-picker select{padding:8px;font-size:11px}.cart-row{grid-template-columns:48px minmax(0,1fr) auto;gap:8px}.cart-thumb-wrap{width:48px;height:48px}}
 
 
-/* DAYZEN: fotografías de productos ampliables */
-.product-card .product-art img,
-.perfume-card .perfume-photo img { cursor: zoom-in; }
-.dayzen-image-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 28px;
-  background: rgba(0,0,0,.88);
-  cursor: zoom-out;
-}
-.dayzen-image-modal.open { display: flex; }
-.dayzen-image-modal > img {
-  display: block;
-  max-width: min(94vw, 1100px);
-  max-height: 90vh;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  background: #fff;
-  border-radius: 4px;
-  box-shadow: 0 18px 70px rgba(0,0,0,.45);
-  cursor: default;
-}
-.dayzen-image-close {
-  position: absolute;
-  top: 14px;
-  right: 20px;
-  width: 44px;
-  height: 44px;
-  border: 1px solid rgba(255,255,255,.7);
-  border-radius: 50%;
-  background: rgba(0,0,0,.35);
-  color: #fff;
-  font-size: 32px;
-  line-height: 1;
-  cursor: pointer;
-}
-@media (max-width: 600px) {
-  .dayzen-image-modal { padding: 12px; }
-  .dayzen-image-modal > img { max-width: 96vw; max-height: 86vh; }
-  .dayzen-image-close { top: 8px; right: 8px; }
-}
+/* DAYZEN — secciones de calzado por público */
+#shoeGrid{display:block}
+.shoe-audience-group{margin:28px 0 42px}
+.shoe-audience-group>h3{font-family:Montserrat,sans-serif;font-size:22px;margin:0 0 18px;color:var(--ink)}
+.shoe-audience-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.single-size{font-size:11px;color:#777;margin:10px 0 13px;min-height:16px}
+@media(max-width:900px){.shoe-audience-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.shoe-audience-group>h3{font-size:18px}.shoe-audience-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.single-size{font-size:10px;margin:8px 0 10px}}
+
+/* DAYZEN — ampliar fotografías de productos */
+.product-art img,.perfume-photo img{cursor:zoom-in}
+.dayzen-image-modal{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:28px;background:rgba(0,0,0,.88);cursor:zoom-out}
+.dayzen-image-modal.open{display:flex}
+.dayzen-image-modal>img{display:block;max-width:min(94vw,1100px);max-height:90vh;width:auto;height:auto;object-fit:contain;background:#fff;border-radius:3px;cursor:default}
+.dayzen-image-close{position:absolute;top:14px;right:18px;width:44px;height:44px;border:1px solid rgba(255,255,255,.65);border-radius:50%;background:#111;color:#fff;font-size:30px;line-height:1;cursor:pointer}
+@media(max-width:620px){.dayzen-image-modal{padding:14px}.dayzen-image-modal>img{max-width:96vw;max-height:84vh}}

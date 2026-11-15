@@ -36,3 +36,16 @@ Nota: Dereck responde con reglas y respuestas preparadas, no es una IA generativ
 
 ## Límites técnicos transparentes
 GitHub Pages es alojamiento estático y no incluye una base de datos ni un servidor. Por eso, el historial de bolsa, visitas y preguntas queda únicamente en el navegador del visitante; no se sincroniza contigo ni entre dispositivos. No hay seguimiento central de clientes ni recuperación mediante mensajes automáticos. Para esas funciones se necesitaría un backend o una integración externa, que podría tener límites o costos. Dereck usa reglas programadas, no IA generativa.
+
+
+## Actualización integral — 15 de noviembre de 2026
+
+Esta versión conserva la estructura y los recursos existentes de DAYZEN e incorpora:
+- Calzado agrupado en secciones de adultos y niños.
+- Tres prendas infantiles y cuatro modelos de calzado del catálogo PDF nro. 6.
+- Fotografías nuevas extraídas directamente del PDF original.
+- Selector de talla únicamente cuando el producto tiene más de una talla disponible.
+- Visor ampliado al hacer clic en las fotografías de los productos.
+- Conservación de Google Analytics 4 y de los eventos comerciales existentes.
+
+Esta carpeta contiene el sitio completo. Antes de sustituir el contenido del repositorio, conserva una copia de seguridad de la versión actual.
